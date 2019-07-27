@@ -71,7 +71,7 @@ public class App {
 
 				if (inmpactedOffers > 0) {
 					// System.out.print(" " + inmpactedOffers + "\n");
-					writeInvalidOffers(offersList, inmpactedOffers);
+					writeInvalidOffers(offersList, inmpactedOffers, String.valueOf(++rowNumber));
 				}
 
 			}
@@ -82,31 +82,34 @@ public class App {
 
 	}
 
-	public static void writeInvalidOffers(List<String> offersList, int numbers) {
+	public static void writeInvalidOffers(List<String> offersList, int numbers, String rowNumber) {
 		System.out.println("Finding Invalid Offers " + numbers);
 		try {
 			List<String> listOfOffers = new ArrayList<String>();
 			listOfOffers.addAll(offersList);
-			listOfOffers.forEach(element -> System.out.print(element + " # "));
+			// listOfOffers.forEach(element -> System.out.print(element + " # "));
 			System.out.println("");
-			// Blank workbook
-			XSSFWorkbook workbook = new XSSFWorkbook();
-			// Create a blank sheet
-			XSSFSheet sheet = workbook.createSheet("InValid Offers Data");
 			String filePath = "C:\\yuvi\\java\\STS\\OfferIssue\\src\\main\\resources\\output.xlsx";
+			// Blank workbook
+			File file = new File(filePath);
+			// Create a FileInputStream object
+			// for getting the information of the file
+			FileInputStream fip = new FileInputStream(file);
+			XSSFWorkbook workbook = new XSSFWorkbook(fip);
+			// Create a blank sheet
+			// XSSFSheet sheet = workbook.createSheet("InValid Offers Data");
+			XSSFSheet sheet = workbook.getSheetAt(0);
+
 			// This data needs to be written (Object[])
 			Map<String, Object[]> data = new TreeMap<String, Object[]>();
-			data.put("1", new Object[] { "ID", "NAME", "LASTNAME" });
-			data.put("2", new Object[] { 1, "Amit", "Shukla" });
-			data.put("3", new Object[] { 2, "Lokesh", "Gupta" });
-			data.put("4", new Object[] { 3, "John", "Adwards" });
-			data.put("5", new Object[] { 4, "Brian", "Schultz" });
-
+			// data.put("1", new Object[] { "ID", "NAME", "LASTNAME" });
+			Object[] objArray = listOfOffers.toArray();
+			data.put(rowNumber, objArray);
 			// Iterate over data and write to sheet
-			Set<String> keyset = data.keySet();
-			int rownum = 0;
+			Set<String> keyset = data.keySet();			
+			int rownum = sheet.getLastRowNum();
 			for (String key : keyset) {
-				Row row = sheet.createRow(rownum++);
+				Row row = sheet.createRow(++rownum);
 				Object[] objArr = data.get(key);
 				int cellnum = 0;
 				for (Object obj : objArr) {
@@ -118,13 +121,18 @@ public class App {
 				}
 			}
 			// Write the workbook in file system
-			FileOutputStream out = new FileOutputStream(new File(filePath));
+			FileOutputStream out = new FileOutputStream(filePath);
 			workbook.write(out);
 			out.close();
 			// System.out.println("output.xlsx written successfully on disk.");
 		} catch (Exception e) {
-			System.out.println("Exception in  method readOfferExcelSheet()");
+			e.printStackTrace();
 		}
+
+	}
+
+	public static void objectArrayCreation(List<String> offersList) {
+		System.out.println(" method objectArrayCreation() ");
 
 	}
 
