@@ -71,7 +71,8 @@ public class App {
 
 				if (inmpactedOffers > 0) {
 					// System.out.print(" " + inmpactedOffers + "\n");
-					writeInvalidOffers(offersList, inmpactedOffers, String.valueOf(++rowNumber));
+					offersList.add(2, String.valueOf(inmpactedOffers));
+					writeInvalidOffers(offersList, inmpactedOffers);
 				}
 
 			}
@@ -82,13 +83,12 @@ public class App {
 
 	}
 
-	public static void writeInvalidOffers(List<String> offersList, int numbers, String rowNumber) {
+	public static void writeInvalidOffers(List<String> offersList, int numbers) {
 		System.out.println("Finding Invalid Offers " + numbers);
 		try {
 			List<String> listOfOffers = new ArrayList<String>();
 			listOfOffers.addAll(offersList);
 			// listOfOffers.forEach(element -> System.out.print(element + " # "));
-			System.out.println("");
 			String filePath = "C:\\yuvi\\java\\STS\\OfferIssue\\src\\main\\resources\\output.xlsx";
 			// Blank workbook
 			File file = new File(filePath);
@@ -104,9 +104,9 @@ public class App {
 			Map<String, Object[]> data = new TreeMap<String, Object[]>();
 			// data.put("1", new Object[] { "ID", "NAME", "LASTNAME" });
 			Object[] objArray = listOfOffers.toArray();
-			data.put(rowNumber, objArray);
+			data.put("1", objArray);
 			// Iterate over data and write to sheet
-			Set<String> keyset = data.keySet();			
+			Set<String> keyset = data.keySet();
 			int rownum = sheet.getLastRowNum();
 			for (String key : keyset) {
 				Row row = sheet.createRow(++rownum);
